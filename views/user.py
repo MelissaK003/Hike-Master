@@ -13,14 +13,22 @@ def fetch_users():
 
     for user in users:
         user_list.append({
-            'id':user.id,
-            'username':user.username,
-            'first_last_name':user.first_last_name,
-            'email':user.email
-              
+            'id': user.id,
+            'username': user.username,
+            'first_last_name': user.first_last_name,
+            'email': user.email,
+            'is_admin':user.is_admin,
+            "hikes": [  
+                {
+                    "hike_name": hike.hike_name,
+                    "location": hike.location, 
+                    "rating": hike.rating,
+                } for hike in user.hikes
+            ]    
         })
 
     return jsonify(user_list)
+
 
 #Add User
 @user_bp.route("/users", methods=["POST"])
@@ -52,10 +60,10 @@ def update_user(user_id):
 
     if user:
         data = request.get_json()
-        username = data['username']
-        first_last_name = data['first_last_name']
-        email = data['email']
-        password = data['password']
+        username = data.get('username',user.username)
+        first_last_name = data.get('first_last_name',user.first_last_name)
+        email = data.get('email', user.email)
+        password = data.get('password',user.password)
 
         check_username = User.query.filter_by(username=username and id!=user.id).first()
         check_email = User.query.filter_by(email=email and id!=user.id).first()

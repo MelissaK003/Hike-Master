@@ -17,6 +17,7 @@ def fetch_hikes():
             'location':hike.location,
             'rating':hike.rating
     
+    
         })
 
     return jsonify(hike_list)

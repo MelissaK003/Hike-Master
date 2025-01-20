@@ -13,7 +13,9 @@ class User(db.Model):
     first_last_name = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), nullable=False)
     password = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
+    hikes = db.relationship("Hike", backref="hike", lazy=True)
 
 # Hike model
 class Hike(db.Model):

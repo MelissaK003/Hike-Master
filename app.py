@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_migrate import Migrate
-from models import User,Hike, db
+from models import TokenBlocklist,db
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 
@@ -10,6 +10,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hike.db'
 migrate = Migrate(app, db)
 db.init_app(app)
+
+
 
 # importing functions from  views
 from views import *
@@ -24,6 +26,12 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] =  timedelta(minutes=15)
 jwt = JWTManager(app)
 jwt.init_app(app)
 
+
+@jwt.token_in_blocklist_loader
+def check_if_token_revoked(jwt_header, jwt_payload):
+    jti = jwt_payload["jti"]
+    token = TokenBlocklist.query.filter_by(jti=jti).first()
+    return token is not None
 
 if __name__ == "__main__":
     app.run()

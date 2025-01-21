@@ -24,7 +24,7 @@ def login():
     else:
         return jsonify({"error": "Either email or password is incorrect"}), 401
     
- # current user
+# current user
 @auth_bp.route("/current_user", methods=["GET"])
 @jwt_required()
 def current_user():
@@ -58,8 +58,6 @@ def delete_account():
 
     if not user:
         return jsonify({"error": "User not found"}), 404
-
-    # Delete the user account
     db.session.delete(user)
     db.session.commit()
 
